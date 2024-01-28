@@ -1,5 +1,9 @@
 package encryptdecrypt;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
@@ -8,10 +12,16 @@ public class Main {
 
     public static void main(String[] args) {
 
+        String input_file = "";   //from which we take input for (-in)
+        String output_file = "";  //where we write text finally to (-out)
         String encrypted_text = "";
         String original_text = "";
         String operation = "enc";
         int shift = 0;
+
+        boolean has_data = false;
+        boolean has_in_file = false;
+        boolean has_out_file = false;
 
         // Taking -mode para1 -key para2 -data para3 as input command line arguments
         String data = "";
@@ -22,11 +32,27 @@ public class Main {
                 shift = Integer.parseInt(args[i+1]);
             }else if(args[i].equals("-data")){
                 data = args[i+1];
+                has_data = true;
+            }else if(args[i].equals("-in")){
+                input_file = args[i+1];
+                has_in_file = true;
+            }else if(args[i].equals("-out")){
+                output_file = args[i+1];
+                has_out_file = true;
             }
         }
 
-        if(operation.equals("enc"))original_text = data;
-        else encrypted_text = data;
+        if((has_in_file && has_data) || has_data){
+            if(operation.equals("enc"))original_text = data;
+            else encrypted_text = data;
+        }else if(has_in_file){
+            String text = takeInputFromFile(input_file);
+            if(operation.equals("enc"))original_text = text;
+            else encrypted_text = text;
+        }
+
+//        if(operation.equals("enc"))original_text = data;
+//        else encrypted_text = data;
 
 //        Scanner sc = new Scanner(System.in);
 //
@@ -37,14 +63,45 @@ public class Main {
 
         if(operation.equals("enc")){
             encrypted_text = encryptViaShift(original_text, shift);
-            System.out.println(encrypted_text);
+            if(!has_out_file)System.out.println(encrypted_text);
+            else{
+                writeToFile(output_file, encrypted_text);
+            }
         }else{
             original_text = decryptViaShift(encrypted_text, shift);
-            System.out.println(original_text);
+            if(!has_out_file)System.out.println(original_text);
+            else writeToFile(output_file, original_text);
         }
 
         //String encrypted_text = encrypt(original_text);
 
+    }
+
+    private static void writeToFile(String outputFile, String text) {
+        File file = new File(outputFile);
+        try(FileWriter fileWriter = new FileWriter(file)){
+            fileWriter.write(text);
+        }
+        catch (IOException e){
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private static String takeInputFromFile(String inputFile) {
+
+        String text = "";
+
+        File file = new File(inputFile);
+        try(Scanner sc = new Scanner(file)){
+            while(sc.hasNext()){
+                text += sc.nextLine();
+            }
+        }
+        catch (FileNotFoundException e){
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        return text;
     }
 
     private static String encryptViaShift(String originalText, int key) {     //for all unicode character (total 95)
