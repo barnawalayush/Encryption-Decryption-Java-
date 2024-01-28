@@ -8,19 +8,51 @@ public class Main {
 
     public static void main(String[] args) {
 
+        String encrypted_text = null;
+        String original_text = null;
+
         Scanner sc = new Scanner(System.in);
 
-        String original_text = sc.nextLine();
+        String operation = sc.nextLine();
+        if(operation.equals("enc")) original_text = sc.nextLine();
+        else encrypted_text = sc.nextLine();
         int shift = sc.nextInt();
 
-        String encrypted_text = encryptViaShift(original_text, shift);
-        //String encrypted_text = encrypt(original_text);
+        if(operation.equals("enc")){
+            encrypted_text = encryptViaShift(original_text, shift);
+            System.out.println(encrypted_text);
+        }else{
+            original_text = decryptViaShift(encrypted_text, shift);
+            System.out.println(original_text);
+        }
 
-        System.out.println(encrypted_text);
+        //String encrypted_text = encrypt(original_text);
 
     }
 
-    private static String encryptViaShift(String originalText, int key) {
+    private static String encryptViaShift(String originalText, int key) {     //for all unicode character (total 95)
+        StringBuilder encrypted_text = new StringBuilder("");
+
+        for(int i=0; i<originalText.length(); i++){
+            char ch = originalText.charAt(i);
+            encrypted_text.append((char)(' ' + (originalText.charAt(i) - ' ' + key) % 95));
+        }
+
+        return encrypted_text.toString();
+    }
+
+    private static String decryptViaShift(String encrypted_text, int key) {
+        StringBuilder original_text = new StringBuilder("");
+
+        for(int i=0; i<encrypted_text.length(); i++){
+            char ch = encrypted_text.charAt(i);
+            original_text.append((char)(' ' + ((encrypted_text.charAt(i) - ' ' + 95 - key) % 95)));
+        }
+
+        return original_text.toString();
+    }
+
+    private static String encryptViaShiftAlphabets(String originalText, int key) {   //shifting only for alphabets
         StringBuilder encrypted_text = new StringBuilder("");
 
         for(int i=0; i<originalText.length(); i++){
