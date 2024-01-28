@@ -8,15 +8,32 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String encrypted_text = null;
-        String original_text = null;
+        String encrypted_text = "";
+        String original_text = "";
+        String operation = "enc";
+        int shift = 0;
 
-        Scanner sc = new Scanner(System.in);
+        // Taking -mode para1 -key para2 -data para3 as input command line arguments
+        String data = "";
+        for(int i=0; i<args.length; i=i+2){
+            if(args[i].equals("-mode")){
+                operation = args[i+1];
+            }else if(args[i].equals("-key")){
+                shift = Integer.parseInt(args[i+1]);
+            }else if(args[i].equals("-data")){
+                data = args[i+1];
+            }
+        }
 
-        String operation = sc.nextLine();
-        if(operation.equals("enc")) original_text = sc.nextLine();
-        else encrypted_text = sc.nextLine();
-        int shift = sc.nextInt();
+        if(operation.equals("enc"))original_text = data;
+        else encrypted_text = data;
+
+//        Scanner sc = new Scanner(System.in);
+//
+//        operation = sc.nextLine();
+//        if(operation.equals("enc")) original_text = sc.nextLine();
+//        else encrypted_text = sc.nextLine();
+//        shift = sc.nextInt();
 
         if(operation.equals("enc")){
             encrypted_text = encryptViaShift(original_text, shift);
@@ -41,7 +58,7 @@ public class Main {
         return encrypted_text.toString();
     }
 
-    private static String decryptViaShift(String encrypted_text, int key) {
+    private static String decryptViaShift(String encrypted_text, int key) {    //for all unicode character (total 95)
         StringBuilder original_text = new StringBuilder("");
 
         for(int i=0; i<encrypted_text.length(); i++){
