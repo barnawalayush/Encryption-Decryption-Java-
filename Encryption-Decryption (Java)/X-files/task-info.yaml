@@ -119,9 +119,9 @@ files:
   - name: output.txt
     visible: true
     learner_created: true
-feedback_link: https://hyperskill.org/projects/46/stages/249/implement#comment
+feedback_link: https://hyperskill.org/learn/step/5391#comment
 status: Solved
 feedback:
   message: Congratulations!
-  time: "Sun, 28 Jan 2024 20:15:33 UTC"
-record: -1
+  time: "Mon, 29 Jan 2024 11:08:06 UTC"
+record: 2

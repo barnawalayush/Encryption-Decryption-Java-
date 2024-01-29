@@ -17,6 +17,7 @@ public class Main {
         String encrypted_text = "";
         String original_text = "";
         String operation = "enc";
+        String algo_selected = "shift";
         int shift = 0;
 
         boolean has_data = false;
@@ -39,6 +40,8 @@ public class Main {
             }else if(args[i].equals("-out")){
                 output_file = args[i+1];
                 has_out_file = true;
+            }else if(args[i].equals("-alg")){
+                algo_selected = args[i+1];
             }
         }
 
@@ -62,13 +65,15 @@ public class Main {
 //        shift = sc.nextInt();
 
         if(operation.equals("enc")){
-            encrypted_text = encryptViaShift(original_text, shift);
+            if(algo_selected.equals("unicode")) encrypted_text = encryptViaShift(original_text, shift);
+            else encrypted_text = encryptViaShiftAlphabets(original_text, shift);
             if(!has_out_file)System.out.println(encrypted_text);
             else{
                 writeToFile(output_file, encrypted_text);
             }
         }else{
-            original_text = decryptViaShift(encrypted_text, shift);
+            if(algo_selected.equals("unicode")) original_text = decryptViaShift(encrypted_text, shift);
+            else original_text = decryptViaShiftAlphabets(encrypted_text, shift);
             if(!has_out_file)System.out.println(original_text);
             else writeToFile(output_file, original_text);
         }
@@ -76,6 +81,7 @@ public class Main {
         //String encrypted_text = encrypt(original_text);
 
     }
+
 
     private static void writeToFile(String outputFile, String text) {
         File file = new File(outputFile);
@@ -133,10 +139,27 @@ public class Main {
             char ch = originalText.charAt(i);
             if(ch>='a' && ch<='z')
                 encrypted_text.append((char)('a' + ((originalText.charAt(i) - 'a' + key) % 26)));
-            else encrypted_text.append(" ");
+            else if(ch>='A' && ch<='B'){
+                encrypted_text.append((char)('A' + ((originalText.charAt(i) - 'A' + key) % 26)));
+            } else encrypted_text.append(" ");
         }
 
         return encrypted_text.toString();
+    }
+
+    private static String decryptViaShiftAlphabets(String encryptedText, int shift) {
+        StringBuilder decrypted_text = new StringBuilder("");
+
+        for(int i=0; i<encryptedText.length(); i++){
+            char ch = encryptedText.charAt(i);
+            if(ch>='a' && ch<='z')
+                decrypted_text.append((char)('a' + ((encryptedText.charAt(i) - 'a' + 26 - shift) % 26)));
+            else if(ch>='A' && ch<='B'){
+                decrypted_text.append((char)('A' + ((encryptedText.charAt(i) - 'A' + 26 - shift) % 26)));
+            }else decrypted_text.append(" ");
+        }
+
+        return decrypted_text.toString();
     }
 
     public static String encrypt(String original_text){   // a->z, b->y, c->x....
