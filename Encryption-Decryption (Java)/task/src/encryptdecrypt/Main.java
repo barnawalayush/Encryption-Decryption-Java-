@@ -48,10 +48,8 @@ public class Main {
             }
         }
 
-        /**
-         * If there is no -out argument, the program must print -data argument to the standard output;
-         * If there are both -data and -in arguments, your program should prefer -data over -in.
-         */
+
+        //If there are both -data and -in arguments, your program should prefer -data over -in.
         if(has_in_file){
             data = takeInputFromFile(input_file);
         }
