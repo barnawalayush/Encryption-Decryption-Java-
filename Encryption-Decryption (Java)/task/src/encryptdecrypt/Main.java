@@ -1,5 +1,8 @@
 package encryptdecrypt;
 
+import ShitingAlgorithms.Shifting;
+import ShitingAlgorithms.ShiftingFactory;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -12,25 +15,25 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String input_file = "";   //from which we take input for (-in)
-        String output_file = "";  //where we write text finally to (-out)
+        String input_file = "";   // file from which we take input for (-in)
+        String output_file = "";  // file to which we write text finally to (-out)
         String encrypted_text = "";
         String original_text = "";
-        String operation = "enc";
-        String algo_selected = "shift";
-        int shift = 0;
+        String operation = "enc";  //enc if we want to encrypt data,  dec if we want to decrypt data
+        String algo_selected = "shift";  // algo name either shift or unicode
+        int key = 0;
 
-        boolean has_data = false;
-        boolean has_in_file = false;
-        boolean has_out_file = false;
+        boolean has_data = false;     // to check arguments have data or not
+        boolean has_in_file = false;  // to check file from where we have to take data is given
+        boolean has_out_file = false; // to check file to  which we have to print output data is given
 
-        // Taking -mode para1 -key para2 -data para3 as input command line arguments
+        // Taking -mode enc -in road_to_treasure.txt -out protected.txt -key 5 -alg unicode as input command line arguments
         String data = "";
         for(int i=0; i<args.length; i=i+2){
             if(args[i].equals("-mode")){
                 operation = args[i+1];
             }else if(args[i].equals("-key")){
-                shift = Integer.parseInt(args[i+1]);
+                key = Integer.parseInt(args[i+1]);
             }else if(args[i].equals("-data")){
                 data = args[i+1];
                 has_data = true;
@@ -45,44 +48,35 @@ public class Main {
             }
         }
 
-        if((has_in_file && has_data) || has_data){
-            if(operation.equals("enc"))original_text = data;
-            else encrypted_text = data;
-        }else if(has_in_file){
-            String text = takeInputFromFile(input_file);
-            if(operation.equals("enc"))original_text = text;
-            else encrypted_text = text;
+        /**
+         * If there is no -out argument, the program must print -data argument to the standard output;
+         * If there are both -data and -in arguments, your program should prefer -data over -in.
+         */
+        if(has_in_file){
+            data = takeInputFromFile(input_file);
         }
 
-//        if(operation.equals("enc"))original_text = data;
-//        else encrypted_text = data;
 
-//        Scanner sc = new Scanner(System.in);
-//
-//        operation = sc.nextLine();
-//        if(operation.equals("enc")) original_text = sc.nextLine();
-//        else encrypted_text = sc.nextLine();
-//        shift = sc.nextInt();
+        // Creating instance of ShiftingFactory class
+        ShiftingFactory shiftingFactory = new ShiftingFactory();
+        Shifting shifting = shiftingFactory.newInstance(algo_selected, data, key);
 
         if(operation.equals("enc")){
-            if(algo_selected.equals("unicode")) encrypted_text = encryptViaShift(original_text, shift);
-            else encrypted_text = encryptViaShiftAlphabets(original_text, shift);
+            encrypted_text = shifting.encryptViaShift(data, key);
             if(!has_out_file)System.out.println(encrypted_text);
             else{
                 writeToFile(output_file, encrypted_text);
             }
         }else{
-            if(algo_selected.equals("unicode")) original_text = decryptViaShift(encrypted_text, shift);
-            else original_text = decryptViaShiftAlphabets(encrypted_text, shift);
+            original_text = shifting.decryptViaShift(data, key);
             if(!has_out_file)System.out.println(original_text);
             else writeToFile(output_file, original_text);
         }
 
-        //String encrypted_text = encrypt(original_text);
-
     }
 
 
+    // To write the encrypted or decrypted text to some file having path outputFile
     private static void writeToFile(String outputFile, String text) {
         File file = new File(outputFile);
         try(FileWriter fileWriter = new FileWriter(file)){
@@ -93,6 +87,8 @@ public class Main {
         }
     }
 
+
+    // To copy the encrypted or decrypted text from file having path inputFile
     private static String takeInputFromFile(String inputFile) {
 
         String text = "";
@@ -110,59 +106,9 @@ public class Main {
         return text;
     }
 
-    private static String encryptViaShift(String originalText, int key) {     //for all unicode character (total 95)
-        StringBuilder encrypted_text = new StringBuilder("");
 
-        for(int i=0; i<originalText.length(); i++){
-            char ch = originalText.charAt(i);
-            encrypted_text.append((char)(' ' + (originalText.charAt(i) - ' ' + key) % 95));
-        }
-
-        return encrypted_text.toString();
-    }
-
-    private static String decryptViaShift(String encrypted_text, int key) {    //for all unicode character (total 95)
-        StringBuilder original_text = new StringBuilder("");
-
-        for(int i=0; i<encrypted_text.length(); i++){
-            char ch = encrypted_text.charAt(i);
-            original_text.append((char)(' ' + ((encrypted_text.charAt(i) - ' ' + 95 - key) % 95)));
-        }
-
-        return original_text.toString();
-    }
-
-    private static String encryptViaShiftAlphabets(String originalText, int key) {   //shifting only for alphabets
-        StringBuilder encrypted_text = new StringBuilder("");
-
-        for(int i=0; i<originalText.length(); i++){
-            char ch = originalText.charAt(i);
-            if(ch>='a' && ch<='z')
-                encrypted_text.append((char)('a' + ((originalText.charAt(i) - 'a' + key) % 26)));
-            else if(ch>='A' && ch<='B'){
-                encrypted_text.append((char)('A' + ((originalText.charAt(i) - 'A' + key) % 26)));
-            } else encrypted_text.append(" ");
-        }
-
-        return encrypted_text.toString();
-    }
-
-    private static String decryptViaShiftAlphabets(String encryptedText, int shift) {
-        StringBuilder decrypted_text = new StringBuilder("");
-
-        for(int i=0; i<encryptedText.length(); i++){
-            char ch = encryptedText.charAt(i);
-            if(ch>='a' && ch<='z')
-                decrypted_text.append((char)('a' + ((encryptedText.charAt(i) - 'a' + 26 - shift) % 26)));
-            else if(ch>='A' && ch<='B'){
-                decrypted_text.append((char)('A' + ((encryptedText.charAt(i) - 'A' + 26 - shift) % 26)));
-            }else decrypted_text.append(" ");
-        }
-
-        return decrypted_text.toString();
-    }
-
-    public static String encrypt(String original_text){   // a->z, b->y, c->x....
+    // a->z, b->y, c->x, d->w so on.... for all 26 alphabets
+    public static String encrypt(String original_text){
         String encrypted_text = "";
 
         for(int i=0; i<original_text.length(); i++){

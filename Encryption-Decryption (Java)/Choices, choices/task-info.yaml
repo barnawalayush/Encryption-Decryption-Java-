@@ -182,10 +182,22 @@ files:
     visible: true
     text: 111122223333
     learner_created: true
+  - name: src/ShitingAlgorithms/Shifting.java
+    visible: true
+    learner_created: true
+  - name: src/ShitingAlgorithms/UnicodeShifts.java
+    visible: true
+    learner_created: true
+  - name: src/ShitingAlgorithms/AlphabetsShifts.java
+    visible: true
+    learner_created: true
+  - name: src/ShitingAlgorithms/ShiftingFactory.java
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/learn/step/5392#comment
 status: Solved
 feedback:
   message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">Hyperskill</a>
     to continue learning.
-  time: "Mon, 29 Jan 2024 11:58:24 UTC"
+  time: "Tue, 30 Jan 2024 06:36:16 UTC"
 record: 3
