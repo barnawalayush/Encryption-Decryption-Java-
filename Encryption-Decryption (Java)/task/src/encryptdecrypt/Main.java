@@ -1,7 +1,7 @@
 package encryptdecrypt;
 
 import ShitingAlgorithms.Shifting;
-import ShitingAlgorithms.ShiftingFactory;
+import ShiftingAlgorithms.ShiftingFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;

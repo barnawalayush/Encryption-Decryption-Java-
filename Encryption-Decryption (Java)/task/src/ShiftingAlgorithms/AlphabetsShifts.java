@@ -1,6 +1,6 @@
-package ShitingAlgorithms;
+package ShiftingAlgorithms;
 
-public class AlphabetsShifts implements Shifting{
+public class AlphabetsShifts implements ShitingAlgorithms.Shifting {
 
     private String text;
     private int key;

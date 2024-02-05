@@ -1,6 +1,6 @@
-package ShitingAlgorithms;
+package ShiftingAlgorithms;
 
-public class UnicodeShifts implements Shifting{
+public class UnicodeShifts implements ShitingAlgorithms.Shifting {
 
     private String text;
     private int key;

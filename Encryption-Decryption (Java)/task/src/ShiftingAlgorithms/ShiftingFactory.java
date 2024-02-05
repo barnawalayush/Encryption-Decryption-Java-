@@ -1,9 +1,9 @@
-package ShitingAlgorithms;
+package ShiftingAlgorithms;
 
 public class ShiftingFactory {
 
-    public Shifting newInstance(String mode, String text, int key){
-        Shifting shifting = null;
+    public ShitingAlgorithms.Shifting newInstance(String mode, String text, int key){
+        ShitingAlgorithms.Shifting shifting = null;
         if(mode.equals("shift")){
             shifting = new AlphabetsShifts(text, key);
         }else if(mode.equals("unicode")) {
