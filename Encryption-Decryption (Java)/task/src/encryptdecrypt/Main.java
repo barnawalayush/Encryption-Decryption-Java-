@@ -1,6 +1,6 @@
 package encryptdecrypt;
 
-import ShitingAlgorithms.Shifting;
+import ShiftingAlgorithms.Shifting;
 import ShiftingAlgorithms.ShiftingFactory;
 
 import java.io.File;

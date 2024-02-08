@@ -1,4 +1,4 @@
-package ShitingAlgorithms;
+package ShiftingAlgorithms;
 
 public interface Shifting {
 

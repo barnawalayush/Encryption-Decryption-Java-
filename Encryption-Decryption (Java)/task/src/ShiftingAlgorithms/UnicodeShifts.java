@@ -1,11 +1,11 @@
 package ShiftingAlgorithms;
 
-public class UnicodeShifts implements ShitingAlgorithms.Shifting {
+public class UnicodeShifts implements ShiftingAlgorithms.Shifting {
 
     private String text;
     private int key;
 
-    public UnicodeShifts(String text, int key){
+    public UnicodeShifts(String text, int key) {
         this.text = text;
         this.key = key;
     }
@@ -16,9 +16,9 @@ public class UnicodeShifts implements ShitingAlgorithms.Shifting {
         String originalText = text;
         StringBuilder encrypted_text = new StringBuilder("");
 
-        for(int i=0; i<originalText.length(); i++){
+        for (int i = 0; i < originalText.length(); i++) {
             char ch = originalText.charAt(i);
-            encrypted_text.append((char)(' ' + (originalText.charAt(i) - ' ' + key) % 95));
+            encrypted_text.append((char) (' ' + (originalText.charAt(i) - ' ' + key) % 95));
         }
 
         return encrypted_text.toString();
@@ -30,9 +30,9 @@ public class UnicodeShifts implements ShitingAlgorithms.Shifting {
         String encrypted_text = text;
         StringBuilder original_text = new StringBuilder("");
 
-        for(int i=0; i<encrypted_text.length(); i++){
+        for (int i = 0; i < encrypted_text.length(); i++) {
             char ch = encrypted_text.charAt(i);
-            original_text.append((char)(' ' + ((encrypted_text.charAt(i) - ' ' + 95 - key) % 95)));
+            original_text.append((char) (' ' + ((encrypted_text.charAt(i) - ' ' + 95 - key) % 95)));
         }
 
         return original_text.toString();
