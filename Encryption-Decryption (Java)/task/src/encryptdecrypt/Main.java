@@ -29,28 +29,28 @@ public class Main {
 
         // Taking -mode enc -in road_to_treasure.txt -out protected.txt -key 5 -alg unicode as input command line arguments
         String data = "";
-        for(int i=0; i<args.length; i=i+2){
-            if(args[i].equals("-mode")){
-                operation = args[i+1];
-            }else if(args[i].equals("-key")){
-                key = Integer.parseInt(args[i+1]);
-            }else if(args[i].equals("-data")){
-                data = args[i+1];
+        for (int i = 0; i < args.length; i = i + 2) {
+            if (args[i].equals("-mode")) {
+                operation = args[i + 1];
+            } else if (args[i].equals("-key")) {
+                key = Integer.parseInt(args[i + 1]);
+            } else if (args[i].equals("-data")) {
+                data = args[i + 1];
                 has_data = true;
-            }else if(args[i].equals("-in")){
-                input_file = args[i+1];
+            } else if (args[i].equals("-in")) {
+                input_file = args[i + 1];
                 has_in_file = true;
-            }else if(args[i].equals("-out")){
-                output_file = args[i+1];
+            } else if (args[i].equals("-out")) {
+                output_file = args[i + 1];
                 has_out_file = true;
-            }else if(args[i].equals("-alg")){
-                algo_selected = args[i+1];
+            } else if (args[i].equals("-alg")) {
+                algo_selected = args[i + 1];
             }
         }
 
 
         //If there are both -data and -in arguments, your program should prefer -data over -in.
-        if(has_in_file){
+        if (has_in_file) {
             data = takeInputFromFile(input_file);
         }
 
@@ -59,28 +59,26 @@ public class Main {
         ShiftingFactory shiftingFactory = new ShiftingFactory();
         Shifting shifting = shiftingFactory.newInstance(algo_selected, data, key);
 
-        if(operation.equals("enc")){
+        if (operation.equals("enc")) {
             encrypted_text = shifting.encryptViaShift(data, key);
-            if(!has_out_file)System.out.println(encrypted_text);
-            else{
+            if (!has_out_file) System.out.println(encrypted_text);
+            else {
                 writeToFile(output_file, encrypted_text);
             }
-        }else{
+        } else {
             original_text = shifting.decryptViaShift(data, key);
-            if(!has_out_file)System.out.println(original_text);
+            if (!has_out_file) System.out.println(original_text);
             else writeToFile(output_file, original_text);
         }
-
     }
 
 
     // To write the encrypted or decrypted text to some file having path outputFile
     private static void writeToFile(String outputFile, String text) {
         File file = new File(outputFile);
-        try(FileWriter fileWriter = new FileWriter(file)){
+        try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(text);
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
@@ -92,12 +90,11 @@ public class Main {
         String text = "";
 
         File file = new File(inputFile);
-        try(Scanner sc = new Scanner(file)){
-            while(sc.hasNext()){
+        try (Scanner sc = new Scanner(file)) {
+            while (sc.hasNext()) {
                 text += sc.nextLine();
             }
-        }
-        catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             System.out.println("Error: " + e.getMessage());
         }
 
@@ -106,13 +103,13 @@ public class Main {
 
 
     // a->z, b->y, c->x, d->w so on.... for all 26 alphabets
-    public static String encrypt(String original_text){
+    public static String encrypt(String original_text) {
         String encrypted_text = "";
 
-        for(int i=0; i<original_text.length(); i++){
-            if(original_text.charAt(i) >= 'a' && original_text.charAt(i) <= 'z'){
+        for (int i = 0; i < original_text.length(); i++) {
+            if (original_text.charAt(i) >= 'a' && original_text.charAt(i) <= 'z') {
                 encrypted_text += mapping.charAt(original_text.charAt(i) - 'a');
-            }else encrypted_text += original_text.charAt(i);
+            } else encrypted_text += original_text.charAt(i);
         }
 
         return encrypted_text;
